@@ -24,4 +24,4 @@ COPY . .
 # CMD [ "python", "train.py"]
 
 # Set entry point
-ENTRYPOINT ["uv", "run", "python", "train.py"]
+ENTRYPOINT ["uv", "run", "python", "train_and_save.py"]

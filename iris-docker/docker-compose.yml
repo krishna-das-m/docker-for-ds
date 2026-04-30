@@ -1,0 +1,66 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB:       iris_db
+      POSTGRES_USER:     iris_user
+      POSTGRES_PASSWORD: iris_pass
+    volumes:
+      - iris_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iris_user -d iris_db"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+  ml:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  iris_pgdata:
+
+# 1. What services exist? services is the list of containers you want
+  # db = name of this service (you can call it anything)
+
+# 2. What image or build?
+  # image:
+
+# 3. How is it configured? Environment variables — “Initial configuration”
+  # POSTGRES_DB → database name created automatically
+  # POSTGRES_USER → admin user
+  # POSTGRES_PASSWORD → password
+  # This runs only the first time the database is initialized.
+
+# 4. How is data handled? Volumes — “Where data is stored permanently”
+  # Left side: iris_pgdata → Docker-managed volume
+  # Right side: /var/lib/postgresql/data → where PostgreSQL stores data
+  # Why needed?Without this:
+  # all data is lost when container stops
+  # With this: data persists across restarts
+
+# 5. How do services communicate?
+  # service names = hostnames
+  # default network created automatically
+
+# 6. Is startup reliable?
+  # healthcheck:
+  # depends_on:
+  # Healthcheck — “Is the database ready?”
+  # This checks if PostgreSQL is actually ready to accept connections.
+  # Breakdown:
+  # pg_isready → built-in PostgreSQL check tool
+  # -U iris_user → user
+  # -d iris_db → database
+  # Timing:
+  # every 3 seconds
+  # wait max 5 seconds per check
+  # try 10 times
+
+# 7. Any ports exposed?
+  # ports:
+# Top-level volumes — “Declare storage”
+# Defines a named volume
+# Docker manages it automatically
+# You don’t need to create it manually.
+

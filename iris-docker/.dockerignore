@@ -1,0 +1,22 @@
+# ignore virtualenvs and local environment artifacts
+.venv/
+venv/
+env/
+ENV/
+
+# Python build / cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+pip-wheel-metadata/
+build/
+dist/
+*.egg-info
+
+# local output, editor, git, compose overrides
+output/
+.vscode/
+*.log
+.git/
+docker-compose.override.yml
