@@ -5,6 +5,8 @@ services:
       POSTGRES_DB:       iris_db
       POSTGRES_USER:     iris_user
       POSTGRES_PASSWORD: iris_pass
+    ports:
+      - "5432:5432" # host can connect via localhost:5432
     volumes:
       - iris_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -17,6 +19,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  notebook:
+    image: jupyter/scipy-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/home/jovyan/work
+    environment:
+      JUPYTER_ENABLE_LAB: "yes"
+      JUPYTER_TOKEN: "mytoken"
 volumes:
   iris_pgdata:
 
